@@ -4,14 +4,25 @@ import socket
 import binascii
 import sys
 
+
 def bytes(integer):
 	return divmod(integer, 0x100)
 
 
 def little_endian_hex_str(dec, length = 4):
 	hex_str = ""
-	
 
+def send_packet(host_socket, msg):	
+	host_socket.send(msg)
+
+	data = host_socket.recv(1024)
+	return data
+
+def connect_to_host(tcp_ip, tcp_port = 34567):
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((tcp_ip, tcp_port))
+	
+	return s
 def build_packet(input_data, message_code, encoding = "ascii"):
 	
 	if encoding == "hex":
@@ -49,20 +60,16 @@ if len(sys.argv) > 1:
 else:
 	TCP_IP = '192.168.2.108'
 
-TCP_PORT = 34567
-BUFFER_SIZE = 1024
 
 login_creds_struct = { "EncryptType" : "MD5", "LoginType" : "DVRIP-Web", "PassWord" : "tlJwpbo6", "UserName" : "admin" }
-
 print json.dumps(login_creds_struct)
 
-MESSAGE = build_packet(login_creds_struct, 1000, "struct")
+msg = build_packet(login_creds_struct, 1000, "struct")
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((TCP_IP, TCP_PORT))
-s.send(MESSAGE)
+s = connect_to_host(TCP_IP)
 
-data = s.recv(BUFFER_SIZE)
+data = send_packet(s, msg)
+
 parsed = data[20:].replace(" ", "")
 
 print "received data:", parsed[:-2]
@@ -70,8 +77,8 @@ print "received data:", parsed[:-2]
  
 parsed_json = json.loads(parsed[:-2])
 session_id = parsed_json["SessionID"]
+
 print "Session established with server:"
 print session_id
 
-s.send(MESSAGE)
 s.close()
