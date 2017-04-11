@@ -20,7 +20,7 @@ def build_packet(input_data, message_code, encoding = "ascii"):
 	elif encoding == "ascii":
 		data = input_data
 	elif encoding == "struct":
-		data = json.dumps(data)
+		data = json.dumps(input_data)
 
 
 	high, low = bytes(message_code)
@@ -44,15 +44,19 @@ def build_packet(input_data, message_code, encoding = "ascii"):
 	packet = head_flag + version + reserved_01 + reserved_02 + session_id + unknown_block_0 + sequence_number + unknown_block_1 + message_byte_1 + message_byte_2 + data_len + data
 	return packet 
 		
-if len(sys.argv):
+if len(sys.argv) > 1:
 	TCP_IP = str(sys.argv[1])
 else:
 	TCP_IP = '192.168.2.108'
+
 TCP_PORT = 34567
 BUFFER_SIZE = 1024
-login_creds = '{ "EncryptType" : "MD5", "LoginType" : "DVRIP-Web", "PassWord" : "tlJwpbo6", "UserName" : "admin" }'
 
-MESSAGE = build_packet(login_creds, 1000)
+login_creds_struct = { "EncryptType" : "MD5", "LoginType" : "DVRIP-Web", "PassWord" : "tlJwpbo6", "UserName" : "admin" }
+
+print json.dumps(login_creds_struct)
+
+MESSAGE = build_packet(login_creds_struct, 1000, "struct")
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((TCP_IP, TCP_PORT))
