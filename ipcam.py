@@ -29,7 +29,7 @@ class IPCam(object):
 		self.socket.close()
 	def send_packet(self, msg):	
 		self.socket.send(msg)
-		data = self.socket.recv(1024)
+		data = self.socket.recv(5012+1024)
 		return data
 	def clean_response(self, data):
 		
@@ -93,3 +93,12 @@ class IPCam(object):
 		
 		print data
 		
+	def encode_info(self):
+		info_struct = {"Name" : "EncodeCapability", "SessionID" : self.session_id_hex}
+		data = self.send(info_struct, 1360, "struct")
+		print data		
+	
+	def general_info(self):
+		info_struct = {"Name" : "General.General", "SessionID" : self.session_id_hex}
+		data = self.send(info_struct, 1042, "struct")
+		print data		
