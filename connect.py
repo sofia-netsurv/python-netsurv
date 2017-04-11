@@ -7,6 +7,8 @@ from codes import check_response_code, lookup_response_code
 
 
 
+def bytes(integer):
+	return divmod(integer, 0x100)
 
 class IPCam(object):
 	def __init__(self, tcp_ip, user="admin", password= "tlJwpbo6", auth = "MD5", tcp_port = 34567):
@@ -79,8 +81,6 @@ class IPCam(object):
 			print lookup_response_code(response_code)
 
 	
-def bytes(integer):
-	return divmod(integer, 0x100)
 
 		
 if len(sys.argv) > 1:
@@ -91,7 +91,8 @@ else:
 
 
 
-cam = IPCam("192.168.2.108")
+cam = IPCam(host_ip)
+
 cam.connect()
 cam.login()
 cam.close()
