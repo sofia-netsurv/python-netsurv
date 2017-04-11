@@ -7,5 +7,10 @@ if len(sys.argv) > 1:
 
 cam = IPCam(host_ip)
 cam.connect()
-cam.login()
+
+if cam.login():
+	print "Success! Connected to " + host_ip
+else:
+	print "Failure. Could not connect."
+
 cam.close()

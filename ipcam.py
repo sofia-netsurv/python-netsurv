@@ -72,17 +72,15 @@ class IPCam(object):
 		login_creds_struct = { "EncryptType" : self.auth, "LoginType" : "DVRIP-Web", "PassWord" : self.password, "UserName" : self.user }
 		data = self.send(login_creds_struct, 1000, "struct")
 
-		print data
 		parsed_json = json.loads(data)
 
 		session_id = parsed_json["SessionID"]
 		response_code = parsed_json["Ret"]
 
 		if check_response_code(response_code):
-			print "Successfully connected to device at " + self.tcp_ip
+			return True
 		else:
-			print "Device returned Error " + str(response_code)
-			print lookup_response_code(response_code)
+			return False
 
 	
 
