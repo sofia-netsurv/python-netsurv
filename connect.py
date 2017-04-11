@@ -5,12 +5,21 @@ import binascii
 import sys
 
 
+class Sofia(object):
+	def __init__(self):
+		pass
+
+
+class IPCam(object):
+	def __init__(self, user="admin", password= "tlJwpbo6"):
+		pass
+
+
+
+
+
 def bytes(integer):
 	return divmod(integer, 0x100)
-
-
-def little_endian_hex_str(dec, length = 4):
-	hex_str = ""
 
 def send_packet(host_socket, msg):	
 	host_socket.send(msg)
@@ -56,29 +65,31 @@ def build_packet(input_data, message_code, encoding = "ascii"):
 	return packet 
 		
 if len(sys.argv) > 1:
-	TCP_IP = str(sys.argv[1])
+	host_ip = str(sys.argv[1])
 else:
-	TCP_IP = '192.168.2.108'
+	host_ip = '192.168.2.108'
 
 
 login_creds_struct = { "EncryptType" : "MD5", "LoginType" : "DVRIP-Web", "PassWord" : "tlJwpbo6", "UserName" : "admin" }
-print json.dumps(login_creds_struct)
 
 msg = build_packet(login_creds_struct, 1000, "struct")
 
-s = connect_to_host(TCP_IP)
+s = connect_to_host(host_ip)
 
 data = send_packet(s, msg)
 
 parsed = data[20:].replace(" ", "")
 
-print "received data:", parsed[:-2]
+#print "received data:", parsed[:-2]
 
  
 parsed_json = json.loads(parsed[:-2])
 session_id = parsed_json["SessionID"]
+response_code = parsed_json["Ret"]
 
-print "Session established with server:"
-print session_id
-
+if response_code == 100:
+	print "Successfully connected to device at " + host_ip
+else:
+	print "Device returned error:"
+	print response_code
 s.close()
