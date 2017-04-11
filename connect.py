@@ -13,4 +13,6 @@ if cam.login():
 else:
 	print "Failure. Could not connect."
 
+cam.system_info()
+
 cam.close()

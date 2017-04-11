@@ -18,7 +18,9 @@ class IPCam(object):
 		self.tcp_port = 34567
 		self.auth = auth
 		self.socket = None
-
+		self.packet_count = 0
+		self.session_int = 0
+		self.session_hex = None
 	def connect(self):
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((self.tcp_ip, self.tcp_port))
@@ -54,7 +56,7 @@ class IPCam(object):
 		reserved_02 = "\x00"	
 		session_id = "\x00" 	#Session id, default 0i
 		unknown_block_0 = "\x00\x00\x00"
-		sequence_number = "\x00"     #Number of packets sent in current session
+		sequence_number = chr(self.packet_count)     #Number of packets sent in current session
 		unknown_block_1 = "\x00\x00\x00\x00\x00"
 		message_byte_1 = chr(low)  	#message code from definition table, little-endian order
 		message_byte_2 = chr(high)
@@ -67,6 +69,8 @@ class IPCam(object):
 		return packet 
 	def send(self, input_data, message_code, encoding = "ascii"):
 		packet = self.build_packet(input_data, message_code, encoding)
+		self.packet_count += 1
+
 		return self.clean_response(self.send_packet(packet))
 	def login(self):	
 		login_creds_struct = { "EncryptType" : self.auth, "LoginType" : "DVRIP-Web", "PassWord" : self.password, "UserName" : self.user }
@@ -74,7 +78,7 @@ class IPCam(object):
 
 		parsed_json = json.loads(data)
 
-		session_id = parsed_json["SessionID"]
+		self.session_id_hex = parsed_json["SessionID"]
 		response_code = parsed_json["Ret"]
 
 		if check_response_code(response_code):
@@ -83,5 +87,9 @@ class IPCam(object):
 			return False
 
 	
-
+	def system_info(self):
+		info_struct = {"Name" : "SystemInfo", "SessionID" : self.session_id_hex}
+		data = self.send(info_struct, 1020, "struct")
+		
+		print data
 		
