@@ -16,6 +16,14 @@ success_codes = {
 	"515" : "Upgrade successful"
 }
 
+command_codes = {
+	
+
+}
+
+
+
+
 def check_response_code(code):
 	code = str(code)
 

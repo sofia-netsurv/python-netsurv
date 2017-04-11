@@ -14,21 +14,19 @@ class IPCam(object):
 		self.user = user
 		self.password = password
 		self.tcp_port = 34567
-		self.auth = auth
 		self.socket = None
 
-	def connect(self):
+	def connect_to_host(self)
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((self.tcp_ip, self.tcp_port))
 		
-	def close(self):
-		self.socket.close()
-	def send_packet(self, msg):	
+	
+	def send_packet(msg):	
 		self.socket.send(msg)
 		data = self.socket.recv(1024)
 		return data
 	
-	def build_packet(self, input_data, message_code, encoding = "ascii"):
+	def build_packet(input_data, message_code, encoding = "ascii"):
 		
 		if encoding == "hex":
 			data = binascii.unhexlify(input_data)
@@ -59,24 +57,9 @@ class IPCam(object):
 		
 		packet = head_flag + version + reserved_01 + reserved_02 + session_id + unknown_block_0 + sequence_number + unknown_block_1 + message_byte_1 + message_byte_2 + data_len + data
 		return packet 
-	def send(self, input_data, message_code, encoding = "ascii"):
-		packet = self.build_packet(input_data, message_code, encoding)
-		return self.send_packet(packet)
-	def login(self):	
-		login_creds_struct = { "EncryptType" : self.auth, "LoginType" : "DVRIP-Web", "PassWord" : self.password, "UserName" : self.user }
-		data = self.send(login_creds_struct, 1000, "struct")
-
-		parsed = data[20:].replace(" ", "")
-
-		parsed_json = json.loads(parsed[:-2])
-		session_id = parsed_json["SessionID"]
-		response_code = parsed_json["Ret"]
-
-		if check_response_code(response_code):
-			print "Successfully connected to device at " + host_ip
-		else:
-			print "Device returned Error " + str(response_code)
-			print lookup_response_code(response_code)
+	def send(input_data, message_code, encoding = "ascii"):
+		packet = build_packet(input_data, message_code, encoding)
+		return send_packet(packet)
 
 	
 def bytes(integer):
@@ -84,16 +67,34 @@ def bytes(integer):
 
 		
 if len(sys.argv) > 1:
-	host_ip = str(sys.argv[1])
+	host_ip = str(sys.argv[1])
 else:
 	host_ip = '192.168.2.108'
 
 
+login_creds_struct = { "EncryptType" : "MD5", "LoginType" : "DVRIP-Web", "PassWord" : "tlJwpbo6", "UserName" : "admin" }
 
 
 cam = IPCam("192.168.2.108")
-cam.connect()
-cam.login()
-cam.close()
+
+data = cam.send(login_creds_struct, 1000, "struct")
 
 
+
+parsed = data[20:].replace(" ", "")
+
+
+parsed_json = json.loads(parsed[:-2])
+session_id = parsed_json["SessionID"]
+response_code = parsed_json["Ret"]
+
+if check_response_code(response_code):
+	print "Successfully connected to device at " + host_ip
+else:
+	print "Device returned Error " + str(response_code)
+	print lookup_response_code(response_code)
+
+
+
+
+s.close()
