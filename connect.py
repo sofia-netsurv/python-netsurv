@@ -2,9 +2,8 @@
 import json
 import socket
 import binascii
+import sys
 
-
-#courtesy of Ned Batchelder on Stack Overflow 
 def bytes(integer):
 	return divmod(integer, 0x100)
 
@@ -12,19 +11,16 @@ def bytes(integer):
 def little_endian_hex_str(dec, length = 4):
 	hex_str = ""
 	
-	
-	
 
 def build_packet(input_data, message_code, encoding = "ascii"):
-
 	
-	
-
 	if encoding == "hex":
 		data = binascii.unhexlify(input_data)
 
 	elif encoding == "ascii":
 		data = input_data
+	elif encoding == "struct":
+		data = json.dumps(data)
 
 
 	high, low = bytes(message_code)
@@ -48,10 +44,10 @@ def build_packet(input_data, message_code, encoding = "ascii"):
 	packet = head_flag + version + reserved_01 + reserved_02 + session_id + unknown_block_0 + sequence_number + unknown_block_1 + message_byte_1 + message_byte_2 + data_len + data
 	return packet 
 		
-	
-hexmsg = "ff 00 00 00 36 00 00 00 00 00 00 00 00 00 e80364 00 00 00 7b2022456e63727970745479706522203a20224d4435222c20224c6f67696e5479706522203a202244565249502d576562222c202250617373576f726422203a2022746c4a7770626f36222c2022557365724e616d6522203a202261646d696e22207d0a"
-
-TCP_IP = '192.168.2.108'
+if len(sys.argv):
+	TCP_IP = str(sys.argv[1])
+else:
+	TCP_IP = '192.168.2.108'
 TCP_PORT = 34567
 BUFFER_SIZE = 1024
 login_creds = '{ "EncryptType" : "MD5", "LoginType" : "DVRIP-Web", "PassWord" : "tlJwpbo6", "UserName" : "admin" }'
