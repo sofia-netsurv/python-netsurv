@@ -3,21 +3,15 @@ import json
 import socket
 import binascii
 import sys
-
+from codes import check_response_code, lookup_response_code
 
 class Sofia(object):
 	def __init__(self):
 		pass
 
-
 class IPCam(object):
 	def __init__(self, user="admin", password= "tlJwpbo6"):
 		pass
-
-
-
-
-
 def bytes(integer):
 	return divmod(integer, 0x100)
 
@@ -87,9 +81,9 @@ parsed_json = json.loads(parsed[:-2])
 session_id = parsed_json["SessionID"]
 response_code = parsed_json["Ret"]
 
-if response_code == 100:
+if check_response_code(response_code):
 	print "Successfully connected to device at " + host_ip
 else:
-	print "Device returned error:"
-	print response_code
+	print "Device returned Error " + str(response_code)
+	print lookup_response_code(response_code)
 s.close()
