@@ -9,7 +9,3 @@ There is very little software support or documentation other than through tools 
 *Command and response codes can be found here:*
 
 https://gist.github.com/ekwoodrich/a6d7b8db8f82adf107c3c366e61fd36f
-
-*Default admin logins found here*
-
-https://gist.github.com/gabonator/74cdd6ab4f733ff047356198c781f27d
