@@ -16,4 +16,6 @@ Placeholder
 
 ## Acknowledgements
 
-Placeholder
+*Telnet access creds from gabonator*
+
+https://gist.github.com/gabonator/74cdd6ab4f733ff047356198c781f27d
