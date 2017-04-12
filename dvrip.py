@@ -10,7 +10,7 @@ from codes import check_response_code, lookup_response_code
 def bytes(integer):
 	return divmod(integer, 0x100)
 
-class IPCam(object):
+class DVRIPCam(object):
 	def __init__(self, tcp_ip, user="admin", password= "tlJwpbo6", auth = "MD5", tcp_port = 34567):
 		self.tcp_ip = tcp_ip	
 		self.user = user
@@ -100,22 +100,36 @@ class IPCam(object):
 		
 		self.pretty_print(data)
 		
-	def encode_info(self):
+	def encode_capabilities(self):
 		info_struct = {"Name" : "EncodeCapability", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1360, "struct")
 		self.pretty_print(data)
-	
-	def general_info(self):
-		info_struct = {"Name" : "General.General", "SessionID" : self.session_id_hex}
-		data = self.send(info_struct, 1042, "struct")
-		self.pretty_print(data)
-	
-	def system_function(self):
+	def system_capabilities(self):
 		info_struct = {"Name" : "SystemFunction", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1360, "struct")
 		self.pretty_print(data)
-		
-	def simplify_encode(self):
-		info_struct = {"Name" : "Simplify.Encode", "SessionID" : self.session_id_hex}
+
+	def general_info(self):
+		info_struct = {"Name" : "General", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1042, "struct")
+		self.pretty_print(data)
+	
+	def camera_info(self, default = False):
+		if default:
+			code = 1044
+		else:
+			code = 1042
+
+		info_struct = {"Name" : "Camera", "SessionID" : self.session_id_hex}
+		data = self.send(info_struct, code, "struct")
+		self.pretty_print(data)
+		
+	def get_encode_info(self, default = False):
+		if default:
+			code = 1044
+		else:
+			code = 1042
+
+		info_struct = {"Name" : "Simplify.Encode", "SessionID" : self.session_id_hex}
+		data = self.send(info_struct, code, "struct")
 		self.pretty_print(data)
