@@ -29,7 +29,7 @@ class IPCam(object):
 		self.socket.close()
 	def send_packet(self, msg):	
 		self.socket.send(msg)
-		data = self.socket.recv(5012+1024)
+		data = self.socket.recv(5012+5012)
 		return data
 	def clean_response(self, data):
 		
@@ -71,12 +71,12 @@ class IPCam(object):
 		packet = self.build_packet(input_data, message_code, encoding)
 		self.packet_count += 1
 
-		return self.clean_response(self.send_packet(packet))
+		return json.loads(self.clean_response(self.send_packet(packet)))
 	def login(self):	
 		login_creds_struct = { "EncryptType" : self.auth, "LoginType" : "DVRIP-Web", "PassWord" : self.password, "UserName" : self.user }
 		data = self.send(login_creds_struct, 1000, "struct")
 
-		parsed_json = json.loads(data)
+		parsed_json = data
 
 		self.session_id_hex = parsed_json["SessionID"]
 		response_code = parsed_json["Ret"]
@@ -86,19 +86,36 @@ class IPCam(object):
 		else:
 			return False
 
-	
+	def pretty_print(self, data):
+		print json.dumps(data, indent = 4, sort_keys = True)		
+
+	def keep_alive(self):
+		message_struct = {"Name" : "KeepAlive", "SessionID" :self.session_id_hex}
+		data = self.send(message_struct, 1006, "struct")
+		self.pretty_print(data)
+
 	def system_info(self):
 		info_struct = {"Name" : "SystemInfo", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1020, "struct")
 		
-		print data
+		self.pretty_print(data)
 		
 	def encode_info(self):
 		info_struct = {"Name" : "EncodeCapability", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1360, "struct")
-		print data		
+		self.pretty_print(data)
 	
 	def general_info(self):
 		info_struct = {"Name" : "General.General", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1042, "struct")
-		print data		
+		self.pretty_print(data)
+	
+	def system_function(self):
+		info_struct = {"Name" : "SystemFunction", "SessionID" : self.session_id_hex}
+		data = self.send(info_struct, 1360, "struct")
+		self.pretty_print(data)
+		
+	def simplify_encode(self):
+		info_struct = {"Name" : "Simplify.Encode", "SessionID" : self.session_id_hex}
+		data = self.send(info_struct, 1042, "struct")
+		self.pretty_print(data)

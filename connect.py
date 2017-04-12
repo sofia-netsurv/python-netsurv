@@ -16,9 +16,7 @@ else:
 cam.general_info()
 sleep(1)
 
-cam.encode_info()
-sleep(2)
-
-cam.system_info()
-sleep(2)
+cam.simplify_encode()
+sleep(1)
+cam.keep_alive()
 cam.close()
