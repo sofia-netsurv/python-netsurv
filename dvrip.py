@@ -94,27 +94,28 @@ class DVRIPCam(object):
 		data = self.send(message_struct, 1006, "struct")
 		self.pretty_print(data)
 
-	def system_info(self):
+	def get_system_info(self):
 		info_struct = {"Name" : "SystemInfo", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1020, "struct")
 		
 		self.pretty_print(data)
 		
-	def encode_capabilities(self):
+	def get_encode_capabilities(self):
 		info_struct = {"Name" : "EncodeCapability", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1360, "struct")
 		self.pretty_print(data)
-	def system_capabilities(self):
+	
+	def get_system_capabilities(self):
 		info_struct = {"Name" : "SystemFunction", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1360, "struct")
 		self.pretty_print(data)
 
-	def general_info(self):
+	def get_general_info(self):
 		info_struct = {"Name" : "General", "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, 1042, "struct")
 		self.pretty_print(data)
 	
-	def camera_info(self, default = False):
+	def get_camera_info(self, default = False):
 		if default:
 			code = 1044
 		else:
