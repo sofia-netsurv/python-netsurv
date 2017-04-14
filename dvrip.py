@@ -116,6 +116,7 @@ class DVRIPCam(object):
 		self.pretty_print(data)
 	
 	def get_camera_info(self, default = False):
+		"""Request data for 'Camera' from  the target DVRIP device."""
 		if default:
 			code = 1044
 		else:
@@ -126,6 +127,13 @@ class DVRIPCam(object):
 		self.pretty_print(data)
 		
 	def get_encode_info(self, default = False):
+		"""Request data for 'Simplify.Encode' from the target DVRIP device.
+
+			Arguments:
+			default -- returns the default values for the type if True
+
+		"""
+
 		if default:
 			code = 1044
 		else:

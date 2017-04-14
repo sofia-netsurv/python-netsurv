@@ -13,10 +13,10 @@ if cam.login():
 	print "Success! Connected to " + host_ip
 else:
 	print "Failure. Could not connect."
-cam.camera_info()
+cam.get_camera_info()
 sleep(1)
-cam.camera_info(True)
+cam.get_camera_info(True)
 sleep(1)
-cam.system_info()
+cam.get_system_info()
 
 cam.close()
