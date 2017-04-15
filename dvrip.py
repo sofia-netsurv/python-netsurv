@@ -94,25 +94,22 @@ class DVRIPCam(object):
 		data = self.send(message_struct, 1006, "struct")
 		self.pretty_print(data)
 
+	def get_info(self, code, command):
+		info_struct = {"Name" : str(command), "SessionID" : self.session_id_hex}
+		data = self.send(info_struct, code, "struct")
+		return data
+	
 	def get_system_info(self):
-		info_struct = {"Name" : "SystemInfo", "SessionID" : self.session_id_hex}
-		data = self.send(info_struct, 1020, "struct")
-		
+		data = self.get_info("General", 1042)
+			
 		self.pretty_print(data)
 		
 	def get_encode_capabilities(self):
-		info_struct = {"Name" : "EncodeCapability", "SessionID" : self.session_id_hex}
-		data = self.send(info_struct, 1360, "struct")
+		data = self.get_info(1360, "EncodeCapability")
 		self.pretty_print(data)
 	
 	def get_system_capabilities(self):
-		info_struct = {"Name" : "SystemFunction", "SessionID" : self.session_id_hex}
-		data = self.send(info_struct, 1360, "struct")
-		self.pretty_print(data)
-
-	def get_general_info(self):
-		info_struct = {"Name" : "General", "SessionID" : self.session_id_hex}
-		data = self.send(info_struct, 1042, "struct")
+		data = self.get_info(1360, "SystemFunction")
 		self.pretty_print(data)
 	
 	def get_camera_info(self, default = False):
@@ -121,9 +118,7 @@ class DVRIPCam(object):
 			code = 1044
 		else:
 			code = 1042
-
-		info_struct = {"Name" : "Camera", "SessionID" : self.session_id_hex}
-		data = self.send(info_struct, code, "struct")
+		data = self.get_info(code, "Camera")
 		self.pretty_print(data)
 		
 	def get_encode_info(self, default = False):
@@ -139,6 +134,5 @@ class DVRIPCam(object):
 		else:
 			code = 1042
 
-		info_struct = {"Name" : "Simplify.Encode", "SessionID" : self.session_id_hex}
-		data = self.send(info_struct, code, "struct")
+		data = self.get_info(code, "Simplify.Encode")
 		self.pretty_print(data)
