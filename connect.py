@@ -14,14 +14,15 @@ if cam.login():
 else:
 	print "Failure. Could not connect."
 
-#enc_info = cam.get_info(1042, "Simplify.Encode")
+enc_info = cam.get_info(1042, "Simplify.Encode")
 
 cam.get_encode_info()
 sleep(1)
 cam.get_camera_info()
 sleep(1)
 
-#enc_info['Simplify.Encode'][0]['MainFormat']['Video']['FPS'] = 20
-#cam.set_info(1040, "Simplify.Encode", enc_info)
-
+enc_info['Simplify.Encode'][0]['ExtraFormat']['Video']['FPS'] = 20
+cam.set_info(1040, "Simplify.Encode", enc_info)
+sleep(2)
+print(cam.get_info(1042, "Simplify.Encode"))
 cam.close()

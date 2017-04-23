@@ -8,6 +8,9 @@ from codes import check_response_code, lookup_response_code
 import struct
 
 def dec_to_rev_hex(integer):
+	"""Accepts an integer and returns a 4 byte list of hex chars
+		in reverse order"""
+
 	byte_list = list(reversed([chr(ord(b)) for b in struct.pack('>I',integer)]))
 	return "".join(byte_list)
 
@@ -37,7 +40,6 @@ class DVRIPCam(object):
 		data = self.socket.recv(5012+5012)
 		return data
 	def clean_response(self, data):
-		
 		cleaned = data[20:].replace(" ", "")
 		cleaned = cleaned[:-2]
 		return cleaned	
