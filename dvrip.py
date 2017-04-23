@@ -3,11 +3,16 @@ import json
 import socket
 import binascii
 import sys
+import array
 from codes import check_response_code, lookup_response_code
+import struct
 
-
+def dec_to_rev_hex(integer):
+	byte_list = list(reversed([chr(ord(b)) for b in struct.pack('>I',integer)]))
+	return "".join(byte_list)
 
 def bytes(integer):
+	
 	return divmod(integer, 0x100)
 
 class DVRIPCam(object):
@@ -62,7 +67,7 @@ class DVRIPCam(object):
 		message_byte_2 = chr(high)
 
 		
-		data_len = chr(len(data)+1) +"\x00\x00\x00" #Size of data in bytes (padded to 2 bytes)
+		data_len = dec_to_rev_hex(len(data)+1) #Size of data in bytes (padded to 4 bytes)
 		data = data + "\x0a"	#ascii data, maximum of 16kb, terminated with a null ascii character
 		
 		packet = head_flag + version + reserved_01 + reserved_02 + session_id + unknown_block_0 + sequence_number + unknown_block_1 + message_byte_1 + message_byte_2 + data_len + data
@@ -94,6 +99,10 @@ class DVRIPCam(object):
 		data = self.send(message_struct, 1006, "struct")
 		self.pretty_print(data)
 
+	def set_info(self, code, command, cam_struct):
+		data = self.send(cam_struct, 1040, "struct")
+		return data
+	
 	def get_info(self, code, command):
 		info_struct = {"Name" : str(command), "SessionID" : self.session_id_hex}
 		data = self.send(info_struct, code, "struct")
