@@ -8,11 +8,17 @@ from codes import check_response_code, lookup_response_code
 import struct
 
 def dec_to_rev_hex(integer):
-	"""Accepts an integer and returns a 4 byte list of hex chars
-		in reverse order"""
+    data = struct.pack('<H', 1000)
+    little_endian_hex_bytes_list = [data[i:i+1] for i in range(0, len(data), 1)]
+    return little_endian_hex_bytes_list
 
-	byte_list = list(reversed([chr(ord(b)) for b in struct.pack('>I',integer)]))
-	return "".join(byte_list)
+
+# def dec_to_rev_hex(integer):
+# 	"""Accepts an integer and returns a 4 byte list of hex chars
+# 		in reverse order"""
+
+# 	byte_list = list(reversed([chr(ord(b)) for b in struct.pack('>I',integer)]))
+# 	return "".join(byte_list)
 
 def bytes(integer):
 	
@@ -94,7 +100,7 @@ class DVRIPCam(object):
 			return False
 
 	def pretty_print(self, data):
-		print json.dumps(data, indent = 4, sort_keys = True)		
+		print(json.dumps(data, indent = 4, sort_keys = True))		
 
 	def keep_alive(self):
 		message_struct = {"Name" : "KeepAlive", "SessionID" :self.session_id_hex}
