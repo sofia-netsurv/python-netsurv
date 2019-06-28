@@ -10,17 +10,14 @@ import struct
 def dec_to_rev_hex(integer):
     data = struct.pack('<H', 1000)
     little_endian_hex_bytes_list = [data[i:i+1] for i in range(0, len(data), 1)]
-    return little_endian_hex_bytes_list
+    return b"".join(little_endian_hex_bytes_list)
 
 
-# def dec_to_rev_hex(integer):
-# 	"""Accepts an integer and returns a 4 byte list of hex chars
-# 		in reverse order"""
+def dec_to_rev_hex_2(integer):
+	byte_list = list(reversed([chr(ord(b)) for b in struct.pack('>I',integer)]))
+	return "".join(byte_list)
 
-# 	byte_list = list(reversed([chr(ord(b)) for b in struct.pack('>I',integer)]))
-# 	return "".join(byte_list)
-
-def bytes(integer):
+def tobytes(integer):
 	
 	return divmod(integer, 0x100)
 
@@ -60,25 +57,40 @@ class DVRIPCam(object):
 			data = json.dumps(input_data)
 
 
-		high, low = bytes(message_code)
+		high, low = tobytes(message_code)
 		
 		#structure of control flow message packet per spec
-		head_flag = "\xFF" 	#One byte fixed value of 0xFF
-		version = "\x00" 	#Version number, currently
-		reserved_01 = "\x00"	#Reserved, fixed value of 0x00
-		reserved_02 = "\x00"	
-		session_id = "\x00" 	#Session id, default 0i
-		unknown_block_0 = "\x00\x00\x00"
-		sequence_number = chr(self.packet_count)     #Number of packets sent in current session
-		unknown_block_1 = "\x00\x00\x00\x00\x00"
-		message_byte_1 = chr(low)  	#message code from definition table, little-endian order
-		message_byte_2 = chr(high)
+		head_flag = b"\xFF" 	#One byte fixed value of 0xFF
+		version = b"\x00" 	#Version number, currently
+		reserved_01 = b"\x00"	#Reserved, fixed value of 0x00
+		reserved_02 = b"\x00"	
+		session_id = b"\x00" 	#Session id, default 0i
+		unknown_block_0 = b"\x00\x00\x00"
+		sequence_number = bytes(chr(self.packet_count), 'utf-8')     #Number of packets sent in current session
+		unknown_block_1 = b"\x00\x00\x00\x00\x00"
+		message_byte_1 = bytes(chr(low), 'utf-8')  	#message code from definition table, little-endian order
+		message_byte_2 = bytes(chr(high), 'utf-8')
 
 		
 		data_len = dec_to_rev_hex(len(data)+1) #Size of data in bytes (padded to 4 bytes)
-		data = data + "\x0a"	#ascii data, maximum of 16kb, terminated with a null ascii character
+		data = bytes(data + "\x0a", 'utf-8')	#ascii data, maximum of 16kb, terminated with a null ascii character
 		
+		print(head_flag)
+		print(version)
+		print(reserved_01)
+		print(reserved_02)
+		print(session_id)
+		print(unknown_block_1)
+		print(message_byte_1)
+		print(message_byte_2)
+		print(data_len)
+		print(data)
+
+		print( dec_to_rev_hex(len(data)+1))
+		#print( dec_to_rev_hex_2(len(data)+1))
+
 		packet = head_flag + version + reserved_01 + reserved_02 + session_id + unknown_block_0 + sequence_number + unknown_block_1 + message_byte_1 + message_byte_2 + data_len + data
+		print(packet)
 		return packet 
 	def send(self, input_data, message_code, encoding = "ascii"):
 		packet = self.build_packet(input_data, message_code, encoding)
