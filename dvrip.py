@@ -6,7 +6,7 @@ import sys
 import array
 from codes import check_response_code, lookup_response_code
 import struct
-from hexdump import dump
+from hexdump import dump, hexdump
 
 def dec_to_rev_hex(integer):
     data = struct.pack('<H', 1000)
@@ -76,25 +76,24 @@ class DVRIPCam(object):
 		data_len = dec_to_rev_hex(len(data)+1) #Size of data in bytes (padded to 4 bytes)
 		data = bytes(data + "\x0a", 'utf-8')	#ascii data, maximum of 16kb, terminated with a null ascii character
 		
-		print(head_flag)
-		print(version)
-		print(reserved_01)
-		print(reserved_02)
-		print(session_id)
-		print(unknown_block_1)
-		print(message_byte_1)
-		print(message_byte_2)
-		print(data_len)
-		print(data)
+		# print(head_flag)
+		# print(version)
+		# print(reserved_01)
+		# print(reserved_02)
+		# print(session_id)
+		# print(unknown_block_1)
+		# print(message_byte_1)
+		# print(message_byte_2)
+		# print(data_len)
+		# print(data)
 
-		print( dec_to_rev_hex(len(data)+1))
-		#print( dec_to_rev_hex_2(len(data)+1))
+		# print( dec_to_rev_hex(len(data)+1))
+		# #print( dec_to_rev_hex_2(len(data)+1))
 
 		packet = head_flag + version + reserved_01 + reserved_02 + session_id + unknown_block_0 + sequence_number + unknown_block_1 + message_byte_1 + message_byte_2 + data_len + data
-                dump(packet, size=2, sep=' ')
-
-
-                return packet 
+		
+		hexdump(packet)
+		return packet 
 	def send(self, input_data, message_code, encoding = "ascii"):
 		packet = self.build_packet(input_data, message_code, encoding)
 		self.packet_count += 1
