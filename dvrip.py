@@ -30,7 +30,11 @@ class DVRIPCam(object):
 		self.socket.close()
 	def send_packet(self, msg):
 		self.socket.send(msg)
-		data = self.socket.recv(5012+5012)
+		data = b''
+		while True:
+			data += self.socket.recv(5012+5012)
+			if b'\x0a\x00'in data:
+				break
 		return data
 	def clean_response(self, data):
 		cleaned = data[20:]
