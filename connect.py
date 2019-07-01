@@ -16,7 +16,7 @@ else:
 
 enc_info = cam.get_info(1042, "Simplify.Encode")
 
-cam.get_encode_info()
+cam.get_system_info()
 sleep(1)
 cam.get_camera_info()
 sleep(1)

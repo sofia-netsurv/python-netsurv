@@ -8,11 +8,8 @@ import array
 from codes import check_response_code, lookup_response_code
 import struct
 
-def dec_to_rev_hex(code):
-	return struct.pack('<H', code)
-
 class DVRIPCam(object):
-	def __init__(self, tcp_ip, user="admin", password= "tlJwpbo6", auth = "MD5", tcp_port = 34567):
+	def __init__(self, tcp_ip, user="admin", password= "tlJwpbo6", auth = "MD5", tcp_port = 34567, debug = False):
 		self.tcp_ip = tcp_ip
 		self.user = user
 		self.password = password
@@ -22,12 +19,15 @@ class DVRIPCam(object):
 		self.packet_count = 0
 		self.session_int = 0
 		self.session_hex = None
+		self.debug = debug
+
 	def connect(self):
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((self.tcp_ip, self.tcp_port))
 
 	def close(self):
 		self.socket.close()
+
 	def send_packet(self, msg):
 		self.socket.send(msg)
 		data = b''
@@ -36,15 +36,16 @@ class DVRIPCam(object):
 			if b'\x0a\x00'in data:
 				break
 		return data
+
 	def clean_response(self, data):
 		cleaned = data[20:]
 		cleaned = cleaned[:-2]
 		return cleaned
+
 	def build_packet(self, input_data, message_code, encoding = "ascii"):
 
 		if encoding == "hex":
 			data = binascii.unhexlify(input_data)
-
 		elif encoding == "ascii":
 			data = input_data
 		elif encoding == "struct":
@@ -62,19 +63,17 @@ class DVRIPCam(object):
 		unknown_block_1 = b"\x00\x00\x00\x00\x00"
 		message_byte = struct.pack('<H', message_code)  	#message code from definition table, little-endian order
 
-
 		data_len = struct.pack('<I', len(data)+1) #Size of data in bytes (padded to 4 bytes)
 		data = bytes(data + "\x0a", 'utf-8')	#ascii data, maximum of 16kb, terminated with a null ascii character
 
 		packet = head_flag + version + reserved_01 + reserved_02 + session_id + unknown_block_0 + sequence_number + unknown_block_1 + message_byte + data_len + data
-
 		return packet
+
 	def send(self, input_data, message_code, encoding = "ascii"):
 		packet = self.build_packet(input_data, message_code, encoding)
 		self.packet_count += 1
 		result = self.clean_response(self.send_packet(packet))
 		result = result.decode('utf-8')
-
 		return json.loads(result)
 
 	def login(self):
@@ -110,7 +109,6 @@ class DVRIPCam(object):
 
 	def get_system_info(self):
 		data = self.get_info(1042, "General")
-
 		self.pretty_print(data)
 
 	def get_encode_capabilities(self):
