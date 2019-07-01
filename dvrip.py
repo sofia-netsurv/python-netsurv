@@ -84,7 +84,10 @@ class DVRIPCam(object):
 	def send(self, input_data, message_code, encoding = "ascii"):
 		packet = self.build_packet(input_data, message_code, encoding)
 		self.packet_count += 1
-		return json.loads(self.clean_response(self.send_packet(packet)))
+		result = self.clean_response(self.send_packet(packet))
+		result = result.decode('utf-8')
+	
+		return json.loads(result)
 
 	def login(self):
 		login_creds_struct = { "EncryptType" : self.auth, "LoginType" : "DVRIP-Web", "PassWord" : self.password, "UserName" : self.user }
