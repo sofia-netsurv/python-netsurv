@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from builtins import bytes
 import json
 import socket
 import binascii
@@ -9,7 +10,7 @@ import struct
 from hexdump import dump, hexdump
 
 def dec_to_rev_hex(code):
-    return struct.pack('<H', code)
+	return struct.pack('<H', code)
 
 class DVRIPCam(object):
 	def __init__(self, tcp_ip, user="admin", password= "tlJwpbo6", auth = "MD5", tcp_port = 34567):
@@ -33,7 +34,7 @@ class DVRIPCam(object):
 		data = self.socket.recv(5012+5012)
 		return data
 	def clean_response(self, data):
-		cleaned = data[20:].replace(" ", "")
+		cleaned = data[20:]
 		cleaned = cleaned[:-2]
 		return cleaned
 	def build_packet(self, input_data, message_code, encoding = "ascii"):
@@ -56,10 +57,10 @@ class DVRIPCam(object):
 		unknown_block_0 = b"\x00\x00\x00"
 		sequence_number = bytes(chr(self.packet_count), 'utf-8')     #Number of packets sent in current session
 		unknown_block_1 = b"\x00\x00\x00\x00\x00"
-		message_byte = dec_to_rev_hex(message_code)  	#message code from definition table, little-endian order
+		message_byte = struct.pack('<H', message_code)  	#message code from definition table, little-endian order
 
 
-		data_len = dec_to_rev_hex(len(data)+1) #Size of data in bytes (padded to 4 bytes)
+		data_len = struct.pack('<I', len(data)+1) #Size of data in bytes (padded to 4 bytes)
 		data = bytes(data + "\x0a", 'utf-8')	#ascii data, maximum of 16kb, terminated with a null ascii character
 
 		# print(head_flag)
@@ -70,21 +71,21 @@ class DVRIPCam(object):
 		# print(unknown_block_1)
 		# print(message_byte_1)
 		# print(message_byte_2)
-		print(data_len)
-		print(data)
+		# print(data_len)
+		# print(data)
 
 		# print( dec_to_rev_hex(len(data)+1))
 		# #print( dec_to_rev_hex_2(len(data)+1))
 
 		packet = head_flag + version + reserved_01 + reserved_02 + session_id + unknown_block_0 + sequence_number + unknown_block_1 + message_byte + data_len + data
 
-		hexdump(packet)
+		# hexdump(packet)
 		return packet
 	def send(self, input_data, message_code, encoding = "ascii"):
 		packet = self.build_packet(input_data, message_code, encoding)
 		self.packet_count += 1
-
 		return json.loads(self.clean_response(self.send_packet(packet)))
+
 	def login(self):
 		login_creds_struct = { "EncryptType" : self.auth, "LoginType" : "DVRIP-Web", "PassWord" : self.password, "UserName" : self.user }
 		data = self.send(login_creds_struct, 1000, "struct")
