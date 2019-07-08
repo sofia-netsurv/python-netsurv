@@ -4,7 +4,7 @@ from time import sleep
 
 if len(sys.argv) > 1:
 	if str(sys.argv[1] == 'interactive'):
-		host_ip = raw_input()
+		host_ip = input()
 	else:
 		host_ip = str(sys.argv[1])
 else:
@@ -16,7 +16,7 @@ if cam.login():
 	print({"command" : "connect", "success" : True });
 
 	while True:
-		command = raw_input()
+		command = input()
 
 		if command == "status":
 			print({"command" : "status", "success" : True, "response" : "connected" });
