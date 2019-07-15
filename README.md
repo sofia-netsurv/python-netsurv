@@ -1,5 +1,5 @@
 # python-netsurv 
-[![Build Status](https://img.shields.io/azure-devops/build/ewoodrich/e5356f4d-e3de-4404-a508-1dade5f0cb6a/1.svg?label=azure%20pipelines)](https://ewoodrich.visualstudio.com/python-netsurv/_build?definitionId=1)
+[![Build Status](https://img.shields.io/azure-devops/build/ewoodrich/e5356f4d-e3de-4404-a508-1dade5f0cb6a/1.svg)](https://ewoodrich.visualstudio.com/python-netsurv/_build?definitionId=1)
 
 Python library for configuring a wide range of IP cameras which use the NETsurveillance ActiveX plugin
 
