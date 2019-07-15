@@ -14,15 +14,9 @@ strategy:
       python.version: '3.6'
     Python37:
       python.version: '3.7'
-    linux:
-      imageName: 'ubuntu-latest'
-    mac:
-      imageName: 'macOS-latest'
-    windows:
-      imageName: 'windows-latest'
 
 pool:
-  vmImage: $(imageName)
+  vmImage: 'ubuntu-latest'
 
 
 steps:
