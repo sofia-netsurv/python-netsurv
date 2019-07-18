@@ -5,8 +5,10 @@ import socket
 import binascii
 import sys
 import array
-from codes import check_response_code, lookup_response_code
+from codes import check_response_code, lookup_response_code, lookup_command_code
 import struct
+
+
 
 class DVRIPCam(object):
 	def __init__(self, tcp_ip, user="admin", password= "tlJwpbo6", auth = "MD5", tcp_port = 34567, debug = False):
@@ -93,53 +95,11 @@ class DVRIPCam(object):
 	def pretty_print(self, data):
 		print(json.dumps(data, indent = 4, sort_keys = True))
 
-	def keep_alive(self):
-		message_struct = {"Name" : "KeepAlive", "SessionID" :self.session_id_hex}
-		data = self.send(message_struct, 1006, "struct")
-		self.pretty_print(data)
-
 	def set_info(self, code, command, cam_struct):
 		data = self.send(cam_struct, 1040, "struct")
 		return data
 
-	def get_info(self, code, command):
+	def get_info(self, command):
 		info_struct = {"Name" : command, "SessionID" : self.session_id_hex}
-		data = self.send(info_struct, code, "struct")
+		data = self.send(info_struct, lookup_command_code(command), "struct")
 		return data
-
-	def get_system_info(self):
-		data = self.get_info(1042, "General")
-		self.pretty_print(data)
-
-	def get_encode_capabilities(self):
-		data = self.get_info(1360, "EncodeCapability")
-		self.pretty_print(data)
-
-	def get_system_capabilities(self):
-		data = self.get_info(1360, "SystemFunction")
-		self.pretty_print(data)
-
-	def get_camera_info(self, default = False):
-		"""Request data for 'Camera' from  the target DVRIP device."""
-		if default:
-			code = 1044
-		else:
-			code = 1042
-		data = self.get_info(code, "Camera")
-		self.pretty_print(data)
-
-	def get_encode_info(self, default = False):
-		"""Request data for 'Simplify.Encode' from the target DVRIP device.
-
-			Arguments:
-			default -- returns the default values for the type if True
-
-		"""
-
-		if default:
-			code = 1044
-		else:
-			code = 1042
-
-		data = self.get_info(code, "Simplify.Encode")
-		self.pretty_print(data)
