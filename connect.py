@@ -1,6 +1,7 @@
 import sys
 from dvrip import DVRIPCam
 from time import sleep
+import json
 
 if len(sys.argv) > 1:
 	if str(sys.argv[1] == 'interactive'):
@@ -13,14 +14,14 @@ else:
 cam = DVRIPCam(host_ip)
 cam.connect()
 if cam.login():
-	print({"command" : "connect", "success" : True });
+	print(json.dumps({"command" : "connect", "success" : True }));
 
 	while True:
 		command = input()
 
 		if command == "status":
-			print({"command" : "status", "success" : True, "response" : "connected" });
+			print(json.dumps({"command" : "status", "success" : True, "response" : "connected" }));
 
 else:
-	print({"command" : "connect", "success" : False});
+	print(json.dumps({"command" : "connect", "success" : False}));
 cam.close()

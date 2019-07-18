@@ -92,9 +92,6 @@ class DVRIPCam(object):
 		else:
 			return False
 
-	def pretty_print(self, data):
-		print(json.dumps(data, indent = 4, sort_keys = True))
-
 	def set_info(self, code, command, cam_struct):
 		data = self.send(cam_struct, 1040, "struct")
 		return data
