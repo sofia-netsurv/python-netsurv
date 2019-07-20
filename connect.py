@@ -12,16 +12,16 @@ else:
 	host_ip = '192.168.1.139'
 
 cam = DVRIPCam(host_ip)
-cam.connect()
-if cam.login():
-	print(json.dumps({"command" : "connect", "success" : True }));
+if cam.connect():
+	if cam.login():
+		print(json.dumps({"command" : "connect", "success" : True }));
 
-	while True:
-		command = input()
+		while True:
+			command = input()
 
-		if command == "status":
-			print(json.dumps({"command" : "status", "success" : True, "response" : "connected" }));
+			if command == "status":
+				print(json.dumps({"command" : "status", "success" : True, "response" : "connected" }));
 
-else:
-	print(json.dumps({"command" : "connect", "success" : False}));
-cam.close()
+	else:
+		print(json.dumps({"command" : "connect", "success" : False}));
+	cam.close()
