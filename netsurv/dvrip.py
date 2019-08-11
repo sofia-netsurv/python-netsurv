@@ -5,7 +5,7 @@ import socket
 import binascii
 import sys
 import array
-from codes import check_response_code, lookup_response_code, lookup_command_code
+from .codes import check_response_code, lookup_response_code, lookup_command_code
 import struct
 
 

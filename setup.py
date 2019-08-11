@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="python-netsurv",
+    name="netsurv",
     version="0.1.0",
     author="Eliot Woodrich & Ebraheem AlAtari",
     author_email="eliot@woodrich.com",
