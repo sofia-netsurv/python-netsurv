@@ -1,4 +1,4 @@
-from netsurv import DVRIPCam
+from dvrip import DVRIPCam
 
 
 def test_init():
