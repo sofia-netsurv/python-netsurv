@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="python-netsurv",
     version="0.1.0",
-    author="Eliot Kent Woodrich",
+    author="Eliot Woodrich & Ebraheem AlAtari",
     author_email="eliot@woodrich.com",
     description="Configure IP cameras.",
     long_description="Python library for configuring a wide range of IP cameras which use the NETsurveillance ActiveX plugin (aka DVRIP, Sofia)",
@@ -17,7 +17,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ],
-    test_suite='nose.collector',
-    tests_require=['nose'],
+    ]
 )
