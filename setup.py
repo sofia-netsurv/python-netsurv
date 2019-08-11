@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="netsurv",
-    version="0.1.0",
+    version="0.1.1",
     author="Eliot Woodrich & Ebraheem AlAtari",
     author_email="eliot@woodrich.com",
     description="Configure IP cameras.",

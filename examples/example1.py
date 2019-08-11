@@ -22,7 +22,7 @@ if cam.connect():
 	sleep(1)
 
 	enc_info['Simplify.Encode'][0]['ExtraFormat']['Video']['FPS'] = 20
-	cam.set_info(1040, "Simplify.Encode", enc_info)
+	cam.set_info("Simplify.Encode", enc_info)
 	sleep(2)
 	pretty_print(cam.get_info("Simplify.Encode"))
 	cam.close()
