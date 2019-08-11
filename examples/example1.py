@@ -1,4 +1,4 @@
-from dvrip import DVRIPCam
+from netsurv import DVRIPCam
 from time import sleep
 import json
 
