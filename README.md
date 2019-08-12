@@ -3,6 +3,12 @@
 
 Python library for configuring a wide range of IP cameras which use the NETsurveillance ActiveX plugin
 
+## Usage
+
+```
+pip install netsurv
+```
+
 ## DVR-IP, NetSurveillance  or "Sofia" Protocol
 The NETSurveillance ActiveX plugin uses a TCP based protocol variously referred to as the "Digital Video Recorder Interface Protocol" or "Sofia" protocol, documented by the "Hangzhou male Mai Information Co".
 
