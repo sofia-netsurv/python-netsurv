@@ -98,8 +98,8 @@ class DVRIPCam(object):
 		else:
 			return False
 
-	def set_info(self, command, cam_struct):
-		data = self.send(cam_struct, lookup_command_code(command), "struct")
+	def set_info(self, command, cam_struct, code=1040):
+		data = self.send(cam_struct, code, "struct") # Missing Codes 1040 default
 		return data
 
 	def get_info(self, command):
