@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="netsurv",
-    version="0.1.2",
+    version="0.1.3",
     author="Eliot Woodrich, Ebraheem AlAthari",
     author_email="eliot@woodrich.com",
     description="Configure IP cameras.",
@@ -15,10 +15,12 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.5",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.5",
     project_urls={
         "Source": "https://github.com/sofia-netsurv/python-netsurv",
         "Bug Reports": "https://github.com/sofia-netsurv/python-netsurv/issues",
