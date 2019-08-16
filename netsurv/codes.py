@@ -16,11 +16,13 @@ success_codes = {
 command_codes = {
 	"KeepAlive" :	1006,
 	"General"	:	1042,
-	"EncodeCapability"	:	1360,
+        "NetWork" : 1042,
+        "EncodeCapability"	:	1360,
 	"SystemFunction"	:	1360,
 	"Camera"	:	1042,			# Request data for 'Camera' from  the target DVRIP device.
 	"Simplify.Encode"	:	1042	# Request data for 'Simplify.Encode' from the target DVRIP device.
-}
+
+        }
 
 def check_response_code(code):
 	code = str(code)
