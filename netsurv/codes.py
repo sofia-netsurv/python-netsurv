@@ -14,11 +14,11 @@ success_codes = {
 }
 
 command_codes = {
-    "KeepAlive":	1006,
-    "ConfigSet"	:	1040,
-    "ConfigGet"	:	1042,
-    "EncodeCapability"	:	1360,
-    "SystemFunction"	:	1360
+    "KeepAlive": 1006,
+    "ConfigSet"	: 1040,
+    "ConfigGet"	: 1042,
+    "EncodeCapability"	: 1360,
+    "SystemFunction"	: 1360
 
 }
 
