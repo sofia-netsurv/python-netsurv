@@ -104,10 +104,7 @@ class DVRIPCam(object):
         self.session_id_hex = parsed_json["SessionID"]
         response_code = parsed_json["Ret"]
 
-        if check_response_code(response_code):
-            return True
-        else:
-            return False
+        return check_response_code(response_code)
 
     def set_info(self, command, cam_struct, code=1040):
         data = self.send(
