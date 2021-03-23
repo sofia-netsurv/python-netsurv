@@ -20,7 +20,7 @@ class DVRIPCam(object):
         self.tcp_ip = tcp_ip
         self.user = user
         self.password = password
-        self.tcp_port = 34567
+        self.tcp_port = tcp_port
         self.auth = auth
         self.socket = None
         self.packet_count = 0
